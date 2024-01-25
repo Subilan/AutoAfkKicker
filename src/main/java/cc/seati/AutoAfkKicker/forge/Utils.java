@@ -25,9 +25,7 @@ public class Utils {
     }
 
     public static void broadcast(ITextComponent component) {
-        getServer().getPlayerList().getPlayers().forEach(p -> {
-            p.sendMessage(component, UUID.randomUUID());
-        });
+        getServer().getPlayerList().getPlayers().forEach(p -> p.sendMessage(component, UUID.randomUUID()));
     }
 
     public static long toTicks(long timeValue, String timeUnit) {
