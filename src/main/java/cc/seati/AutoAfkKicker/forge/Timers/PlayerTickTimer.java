@@ -42,11 +42,7 @@ public class PlayerTickTimer {
     private void onTickEnd() {
         if (!this.working) return;
         ServerPlayerEntity find = Utils.getServerPlayerByName(playername);
-        // The player is not online anymore.
-        if (find == null) {
-            PlayerTickTimerStorage.removeTimerForName(playername);
-            return;
-        }
+        if (find == null) return;
 
         if (tickCount > Config.getMaxAFKTimeTicks() + Config.getMaxInactiveTimeTicks()) {
             find.disconnect();
