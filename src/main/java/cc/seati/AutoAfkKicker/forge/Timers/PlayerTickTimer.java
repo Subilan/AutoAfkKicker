@@ -16,7 +16,7 @@ public class PlayerTickTimer {
     // 当前计时器的 tick 数量
     public Integer tickCount = 0;
     // 是否已经送达进入 AFK 的提示
-    public boolean afkMessageSent = false;
+    public boolean afkEnteringMessageSent = false;
 
     public static PlayerTickTimer createFor(String playername) {
         PlayerTickTimer inst = new PlayerTickTimer();
@@ -46,14 +46,24 @@ public class PlayerTickTimer {
 
         if (tickCount > Config.getMaxAFKTimeTicks() + Config.getMaxInactiveTimeTicks()) {
             find.disconnect();
-        } else if (tickCount > Config.getMaxInactiveTimeTicks() && !this.afkMessageSent) {
+            return;
+        }
+
+        if (tickCount > Config.getMaxInactiveTimeTicks() && !this.afkEnteringMessageSent) {
             find.sendMessage(Config.getEnteringAFKComp(), UUID.randomUUID());
-            this.afkMessageSent = true;
+            Utils.broadcast(Config.getEnteringAFKBroadcast(playername));
+            this.afkEnteringMessageSent = true;
         }
     }
 
     public void reset() {
+        if (this.afkEnteringMessageSent) {
+            ServerPlayerEntity find = Utils.getServerPlayerByName(playername);
+            if (find == null) return;
+            find.sendMessage(Config.getLeavingAFKComp(), UUID.randomUUID());
+            Utils.broadcast(Config.getLeavingAFKBroadcast(playername));
+        }
         this.tickCount = 0;
-        this.afkMessageSent = false;
+        this.afkEnteringMessageSent = false;
     }
 }

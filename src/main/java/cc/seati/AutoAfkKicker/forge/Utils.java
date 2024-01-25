@@ -2,10 +2,12 @@ package cc.seati.AutoAfkKicker.forge;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -20,6 +22,12 @@ public class Utils {
 
     public static MinecraftServer getServer() {
         return ServerLifecycleHooks.getCurrentServer();
+    }
+
+    public static void broadcast(ITextComponent component) {
+        getServer().getPlayerList().getPlayers().forEach(p -> {
+            p.sendMessage(component, UUID.randomUUID());
+        });
     }
 
     public static long toTicks(long timeValue, String timeUnit) {
